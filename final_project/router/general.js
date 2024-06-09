@@ -12,14 +12,14 @@ public_users.post("/register", (req,res) => {
   if (!username || !password){
       return res.status(422).json({error:"missing body params, make sure to provide password & username"});
   }
-  if (users.filter(user => user.username === username) != []){
-    return res.status(409).json({error:"username already exsist", users:users, res:users.filter(user => user.username === username)});
+  if (users.filter(user => user.username === username).length > 0){
+    return res.status(409).json({error:"username already exsist"});
   }
   if (!isValid(username)){
         return res.status(401).json({error:"username is not valid"});
   }
   users.push({username:username, password:password})
-  return res.status(200).json({message:"Successful", users:users});
+  return res.status(200).json({message:"Successful"});
 });
 
 // Get the book list available in the shop
