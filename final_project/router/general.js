@@ -23,32 +23,66 @@ public_users.post("/register", (req,res) => {
 });
 
 // Get the book list available in the shop
-public_users.get('/',function (req, res) {
+public_users.get('/', function (req, res) {
   //Write your code here
-  return res.status(200).json(books);
+  let getBooks = new Promise((resolve) => {
+    if (book.length != 0){
+        resolve()
+    }
+  });
+  return getBooks.then(res.status(200).json(books));
 });
 
 // Get book details based on ISBN
-public_users.get('/isbn/:isbn',function (req, res) {
+public_users.get('/isbn/:isbn', function (req, res) {
   //Write your code here
-  const isbn = req.params.isbn;
-  return res.status(200).json(books[isbn]);
+  let findBook = new Promise((resolve, reject) => {
+      try {
+        const isbn = req.params.isbn;
+        if (isbn !== null) {
+            resolve(books[isbn])
+        } else {
+            reject("null isbn")
+        }
+    } catch {
+        reject("Something Happend")
+    }
+  });
+  return findBook.then((book) => res.status(200).json(book))
+                    .catch((err) => res.status(404).json("Error" + err));
  });
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
   //Write your code here
-  const author = req.params.author;
-  let booksArray = Object.keys(books).map(function(_) { return books[_]; })
-  return res.status(200).json({"booksbyauthor":booksArray.filter((book) => book.author === author)});
+  getBooksbyAuthor = new Promise((resolve, reject) => {
+    try{
+        const author = req.params.author;
+        let booksArray = Object.keys(books).map(function(_) { return books[_]; })
+        resolve({"booksbyauthor":booksArray.filter((book) => book.author === author)})
+    } catch {
+        reject("something happend")
+    }
+  });
+  
+  return getBooksbyAuthor.then(data => res.status(200).json(data))
+                        .catch(err => res.status(404).json("ERROR " + err))
 });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
   //Write your code here
-  const title = req.params.title;
-  let titlesArray = Object.keys(books).map(function(_) { return books[_]; })
-  return res.status(200).json({"booksbytitle":titlesArray.filter((book) => book.title === title)});
+  getBooksbyTitle = new Promise((resolve, reject) => {
+    try{
+        const title = req.params.title;
+        let booksArray = Object.keys(books).map(function(_) { return books[_]; })
+        resolve({"booksbytitle":booksArray.filter((book) => book.title === title)})
+    } catch {
+        reject("something happend")
+    }
+  });
+  return getBooksbyTitle.then(data => res.status(200).json(data))
+                        .catch(err => res.status(404).json("ERROR " + err))
 });
 
 //  Get book review
