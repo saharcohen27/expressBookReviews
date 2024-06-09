@@ -7,6 +7,8 @@ let users = [];
 
 const isValid = (username)=>{ //returns boolean
 //write code to check is the username is valid
+    const usernameRegex = /^[a-z0-9_.]+$/
+    return usernameRegex.test(username)
 }
 
 const authenticatedUser = (username,password)=>{ //returns boolean
